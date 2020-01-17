@@ -1,0 +1,47 @@
+La première étape consiste à importer les classes et fonctions nécessaires :
+ 
+
+Dans Keras, les couches utilisées pour les convolutions bidimensionnelles attendent des valeurs de pixels avec les dimensions [pixels] [largeur] [hauteur] [canaux].
+Dans le cas du RVB, la dernière dimension des pixels serait de 3 pour les composantes rouge, verte et bleue et ce serait comme d'avoir 3 entrées d'image pour chaque image couleur. Dans le cas de MNIST où les valeurs des pixels sont des niveaux de gris, la dimension des pixels est définie sur 1.
+ 
+Comme précédemment, c'est une bonne idée de normaliser les valeurs des pixels dans la plage 0 et 1 et un codage à chaud des variables de sortie
+ 
+nous définissons une grande architecture CNN avec des couches de regroupement convolutives supplémentaires et des couches entièrement connectées. La topologie du réseau peut être résumée comme suit :
+1-	La première couche cachée est une couche convolutionnelle appelée Convolution2D. La couche a 32 cartes de caractéristiques, qui ont une taille de 5 × 5 et une fonction d'activation du redresseur. Il s'agit de la couche d'entrée, qui attend des images avec le contour de la structure au-dessus de [pixels] [largeur] [hauteur].
+2-	Ensuite, nous définissons une couche de regroupement qui prend le max appelé MaxPooling2D. Il est configuré avec une taille de pool de 2 × 2.
+3-	Couche convolutionnelle avec 15 cartes de caractéristiques de taille 3 × 3.
+4-	Couche de pooling prenant au maximum plus de 2 * 2 patchs.
+5-	La couche suivante est une couche de régularisation utilisant le décrochage appelé Dropout. Il est configuré pour exclure aléatoirement 20% des neurones de la couche afin de réduire le sur-ajustement.
+6-	Vient ensuite une couche qui convertit les données de la matrice 2D en un vecteur appelé Aplatir. Il permet à la sortie d'être traitée par des couches standard entièrement connectées.
+7-	Couche entièrement connectée avec 128 neurones et activation du redresseur.
+8-	Couche entièrement connectée avec 50 neurones et activation du redresseur.
+9-	Couche de sortie. 
+
+
+le modèle est adapté sur 45 époques avec une taille de lot de 200.
+
+ 
+
+Après en enregistre la résultat de notre modèle dans un fichier « .h5 »
+Keras fournit un format de sauvegarde de base utilisant la norme HDF5 . Le modèle enregistré peut être traité comme un seul blob binaire.
+Keras vous permet d'exporter un modèle et un optimiseur dans un fichier afin qu'il puisse être utilisé sans accès au code python d'origine. Il contient des poids, des variables et la configuration du modèle. Puisque l'état de l'optimiseur est récupéré, vous pouvez même reprendre l'entraînement exactement là où vous vous étiez arrêté.
+Vous pouvez utiliser model.save(filepath)pour enregistrer un modèle Keras dans un seul fichier HDF5 qui contiendra:
+•	les poids du modèle.
+•	la configuration de la formation (perte, optimiseur)
+•	l'état de l'optimiseur, permettant de reprendre l'entraînement exactement là où vous vous étiez arrêté
+ 
+Prédire notre image
+Lors de la prévision d'une seule image, vous devez remodeler l'image même si vous n'en avez qu'une. Votre entrée doit être de forme :
+ [1, image_width, image_height, number_of_channels].
+On load notre modèle enregistrer sous le format « .h5 » :
+ 
+On load notre image et on le préparer pour la prédiction :
+ 
+On prédit et on affiche le résultat :
+ 
+
+Test :
+On dessine un nombre avec paint 
+
+On lance notre programme 
+ 
